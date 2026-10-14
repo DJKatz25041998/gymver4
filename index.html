@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+html_v4 = """<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Body Recomp Pro - AI Calo & Physique Tracker</title>
+  <title>Body Recomp Pro V4 - Calo, Physique & Supplement Tracker</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -17,14 +17,28 @@
 </head>
 <body class="p-4 md:p-8 max-w-6xl mx-auto pb-28">
 
+  <!-- BANNER LỜI NHẮC THÔNG MINH THEO KHUNG GIỜ THỰC TẾ -->
+  <div id="liveSmartBanner" class="mb-5 p-3.5 rounded-2xl bg-gradient-to-r from-orange-500/20 via-amber-500/15 to-emerald-500/20 border border-orange-500/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+    <div class="flex items-center gap-3">
+      <div class="text-2xl animate-bounce" id="bannerIcon">⏰</div>
+      <div>
+        <div class="text-xs font-bold text-orange-300 uppercase tracking-wider" id="bannerTimeTitle">Lời nhắc khung giờ hiện tại</div>
+        <div class="text-sm font-semibold text-white mt-0.5" id="bannerMessage">Đang kiểm tra lịch trình sinh học...</div>
+      </div>
+    </div>
+    <button onclick="enableBrowserNotifications()" id="notifBtn" class="bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl whitespace-nowrap transition shadow-md">
+      🔔 Bật Thông Báo Nhắc Giờ
+    </button>
+  </div>
+
   <!-- Header -->
   <div class="mb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
     <div>
       <h1 class="text-2xl font-extrabold text-white flex items-center gap-2">
-        🔥 Body Recomp Pro (6 Tháng: Giảm Mỡ Nọng Cằm & Tăng Cơ)
+        🔥 Body Recomp Pro V4 (Dinh Dưỡng • Vóc Dáng • Thuốc Bổ)
       </h1>
       <p class="text-slate-400 text-xs mt-1">
-        Hồ sơ: Cao 1.65m • Nặng gốc 65.25kg (BMI 23.96) • Mục tiêu: Bodyfat < 15%, Jawline sắc nét, Phục hồi cổ tay
+        Hồ sơ: Cao 1.65m • Nặng gốc 65.25kg (BMI 23.96) • Mục tiêu: Bodyfat < 15%, Jawline sắc nét, Lành gân cổ tay
       </p>
     </div>
     <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
@@ -38,11 +52,11 @@
     </div>
   </div>
 
-  <!-- Thanh Cài Đặt Gemini API Key (Dùng chung cho Quét Đồ Ăn & Chấm Điểm Vóc Dáng) -->
+  <!-- Thanh Cài Đặt Gemini API Key -->
   <div class="card p-3.5 mb-6 bg-slate-900/90 border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
     <div class="text-xs text-slate-300 flex items-center gap-2">
       <span class="text-lg">🔑</span>
-      <span><b>Kết nối AI Vision (Miễn phí):</b> Dùng chung cho cả 2 tính năng <b>Quét Ảnh Đồ Ăn</b> & <b>AI Phân Tích Vóc Dáng / Góc Cằm</b></span>
+      <span><b>Kết nối AI Vision (Miễn phí):</b> Dùng cho <b>Quét Ảnh Đồ Ăn</b>, <b>Quét Vỏ Hộp Thuốc Bổ</b> & <b>Chấm Điểm Vóc Dáng</b></span>
     </div>
     <div class="flex items-center gap-2 w-full md:w-auto">
       <input type="password" id="apiKeyInput" placeholder="Dán mã Gemini API Key (AIza...)" onchange="saveApiKey()" class="bg-slate-950 border border-slate-600 rounded-xl px-3 py-1.5 text-xs text-white w-full md:w-64">
@@ -50,16 +64,19 @@
     </div>
   </div>
 
-  <!-- Thanh Chuyển Tab Chức Năng -->
-  <div class="grid grid-cols-3 gap-2 mb-6">
-    <button onclick="switchTab('tab-calo')" id="btn-tab-calo" class="tab-btn active card py-3 px-2 text-xs md:text-sm font-bold text-center transition">
+  <!-- Thanh Chuyển 4 Tab Chức Năng -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+    <button onclick="switchTab('tab-calo')" id="btn-tab-calo" class="tab-btn active card py-3 px-2 text-xs font-bold text-center transition">
       🍽️ 1. Dinh Dưỡng & Quét Đồ Ăn
     </button>
-    <button onclick="switchTab('tab-physique')" id="btn-tab-physique" class="tab-btn card py-3 px-2 text-xs md:text-sm font-bold text-center text-slate-300 transition">
-      📸 2. Nhật Ký Vóc Dáng & Nọng Cằm
+    <button onclick="switchTab('tab-physique')" id="btn-tab-physique" class="tab-btn card py-3 px-2 text-xs font-bold text-center text-slate-300 transition">
+      📸 2. Nhật Ký Vóc Dáng & Cằm
     </button>
-    <button onclick="switchTab('tab-workout')" id="btn-tab-workout" class="tab-btn card py-3 px-2 text-xs md:text-sm font-bold text-center text-slate-300 transition">
-      🩹 3. Check-list Tập & Cổ Tay
+    <button onclick="switchTab('tab-supp')" id="btn-tab-supp" class="tab-btn card py-3 px-2 text-xs font-bold text-center text-slate-300 transition">
+      💊 3. Thuốc Bổ & Lời Nhắc Giờ
+    </button>
+    <button onclick="switchTab('tab-workout')" id="btn-tab-workout" class="tab-btn card py-3 px-2 text-xs font-bold text-center text-slate-300 transition">
+      🩹 4. Check-list Tập & Cổ Tay
     </button>
   </div>
 
@@ -227,10 +244,8 @@
       </p>
 
       <div class="grid md:grid-cols-2 gap-5 items-start">
-        <!-- Cột trái: Upload ảnh Body & Góc cằm + Số đo -->
         <div class="space-y-4">
           <div class="grid grid-cols-2 gap-3">
-            <!-- Ảnh 1: Dáng người (Body) -->
             <div class="border-2 border-dashed border-slate-600 hover:border-cyan-400 rounded-xl p-3 text-center cursor-pointer" onclick="document.getElementById('bodyPhotoInput').click()">
               <input type="file" id="bodyPhotoInput" accept="image/*" class="hidden" onchange="handlePhysiquePhoto(event, 'body')">
               <div id="bodyPhotoPlaceholder" class="py-6">
@@ -241,7 +256,6 @@
               <img id="bodyPhotoPreview" class="hidden h-36 w-full object-cover rounded-lg mx-auto" />
             </div>
 
-            <!-- Ảnh 2: Góc nghiêng Nọng cằm (Jawline) -->
             <div class="border-2 border-dashed border-slate-600 hover:border-cyan-400 rounded-xl p-3 text-center cursor-pointer" onclick="document.getElementById('jawPhotoInput').click()">
               <input type="file" id="jawPhotoInput" accept="image/*" class="hidden" onchange="handlePhysiquePhoto(event, 'jaw')">
               <div id="jawPhotoPlaceholder" class="py-6">
@@ -253,7 +267,6 @@
             </div>
           </div>
 
-          <!-- Số đo hình thể -->
           <div class="grid grid-cols-3 gap-2">
             <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
               <label class="text-[11px] text-slate-400">Vòng eo rốn (cm)</label>
@@ -280,7 +293,6 @@
           <div id="aiPhysiqueResult" class="hidden bg-slate-950 border border-cyan-500/40 rounded-xl p-3 text-xs text-slate-200 space-y-1"></div>
         </div>
 
-        <!-- Cột phải: Khung So Sánh Trước - Sau (Before / After Comparator) -->
         <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700">
           <div class="flex justify-between items-center mb-3">
             <span class="text-xs font-bold text-amber-400 uppercase">⚡ So Sánh Sự Thay Đổi (Before vs After)</span>
@@ -306,48 +318,115 @@
       </div>
     </div>
 
-    <!-- Bộ Sưu Tập Ảnh Tiến Độ (Timeline Gallery) -->
     <div class="card p-5">
       <h3 class="text-base font-bold text-white mb-3">🖼️ Album Hành Trình Lột Xác (6 Tháng)</h3>
-      <div id="physiqueGallery" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div id="physiqueGallery" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 3: THUỐC BỔ (DHC/VITAMIN) & BỘ HẸN GIỜ NHẮC NHỞ ================= -->
+  <div id="tab-supp" class="space-y-6 hidden">
+    <!-- Cảnh báo Tương tác Trà xanh Matcha & Thuốc bổ -->
+    <div class="bg-amber-500/10 border border-amber-500/40 rounded-2xl p-4 flex items-start gap-3">
+      <div class="text-2xl">⚠️</div>
+      <div class="text-xs text-slate-200 leading-relaxed">
+        <b class="text-amber-300">Quy tắc Vàng chống kỵ chất (Matcha Cozy vs Thuốc bổ DHC):</b><br>
+        Bột trà xanh Matcha chứa <b>Tannin & Catechin</b>. Nếu uống viên bổ sung (đặc biệt là Kẽm, Sắt, Vitamin nhóm B/C hoặc khoáng chất DHC) cùng lúc với Matcha, cơ thể sẽ bị kết tủa mất 40-60% hoạt chất và dễ gây buồn nôn khi bụng rỗng. <b>Giải pháp:</b> Uống Matcha Nước Dừa lúc 07:00 sáng trước tập, và chỉ uống Thuốc bổ <b>sau bữa ăn trưa hoặc bữa tối</b> (cách Matcha ít nhất 2 tiếng)!
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Cột trái: Lịch uống thuốc bổ & Phục hồi cổ tay trong ngày -->
+      <div class="card p-5 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+          <div>
+            <h2 class="text-base font-bold text-purple-400">💊 Check-list Thuốc Bổ & Phục Hồi Gân Cổ Tay</h2>
+            <p class="text-[11px] text-slate-400">Tích chọn khi bạn đã uống hôm nay (Tiến độ: <span id="suppProgressText" class="text-purple-300 font-bold">0/5</span>)</p>
+          </div>
+          <button onclick="resetSupplements()" class="text-xs text-slate-400 hover:text-white underline">Bỏ tích hết</button>
+        </div>
+
+        <div id="supplementListContainer" class="space-y-2.5">
+          <!-- Render tự động từ danh sách thuốc bổ -->
+        </div>
+
+        <!-- Thêm viên uống / thuốc bổ mới của bạn -->
+        <div class="pt-3 border-t border-slate-700/80 space-y-2">
+          <div class="text-xs font-bold text-slate-300">➕ Thêm thuốc bổ / TPCN mới vào lịch cố định:</div>
+          <div class="grid grid-cols-3 gap-2">
+            <input type="text" id="newSuppName" placeholder="Tên (VD: DHC Kẽm)" class="col-span-2 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+            <input type="time" id="newSuppTime" value="12:30" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white">
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="newSuppNote" placeholder="Công dụng / Lưu ý (VD: Uống sau ăn trưa 1 viên)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+            <button onclick="addCustomSupplement()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap">Thêm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột phải: Hệ thống Chuông Nhắc Giờ & Xuất Lịch báo thức iPhone (.ics) -->
+      <div class="space-y-6">
+        <div class="card p-5 space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+            <div>
+              <h2 class="text-base font-bold text-orange-400">⏰ Bộ Hẹn Giờ Nhắc Nhở Tự Động Trong Ngày</h2>
+              <p class="text-[11px] text-slate-400">Tự động phát âm báo & thông báo đẩy khi đến giờ uống nước, thuốc bổ, ăn và tập.</p>
+            </div>
+            <button onclick="downloadICS()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl whitespace-nowrap">
+              📲 Cài Vào Lịch iPhone (.ics)
+            </button>
+          </div>
+
+          <div id="remindersListContainer" class="space-y-2 text-xs">
+            <!-- Render danh sách mốc giờ nhắc -->
+          </div>
+        </div>
+
+        <!-- Khung chụp ảnh túi thuốc DHC / Vitamin để AI tư vấn giờ uống -->
+        <div class="card p-4 border border-purple-500/40 bg-slate-900/70 space-y-3">
+          <div class="text-xs font-bold text-purple-300">📸 Chụp Ảnh Gói Thuốc Bổ / DHC Để AI Xếp Giờ Uống Chuẩn</div>
+          <div class="flex gap-2 items-center">
+            <input type="file" id="suppPhotoInput" accept="image/*" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500">
+            <button onclick="analyzeSuppPhotoAI()" id="analyzeSuppBtn" class="bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap">AI Đọc Nhãn</button>
+          </div>
+          <div id="aiSuppResult" class="hidden bg-slate-950 p-3 rounded-xl border border-slate-700 text-xs text-slate-200 leading-relaxed"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ================= TAB 3: CHECK-LIST TẬP LUYỆN, NƯỚC & PHỤC HỒI CỔ TAY ================= -->
+  <!-- ================= TAB 4: CHECK-LIST TẬP LUYỆN, NƯỚC & PHỤC HỒI CỔ TAY ================= -->
   <div id="tab-workout" class="space-y-6 hidden">
     <div class="grid md:grid-cols-2 gap-6">
-      <!-- Check-list thói quen giảm nọng cằm & đốt mỡ mỗi ngày -->
       <div class="card p-5 space-y-3">
         <h2 class="text-base font-bold text-emerald-400 border-b border-slate-700 pb-2">✅ Check-list Kỷ Luật Hằng Ngày (Giảm Mỡ Nọng Cằm)</h2>
 
         <label class="flex items-center gap-3 bg-slate-800/70 p-3 rounded-xl cursor-pointer">
-          <input type="checkbox" id="chkMatcha" onchange="saveHabitState()" class="w-4 h-4 accent-emerald-500">
-          <span class="text-xs text-slate-200">🍵 Uống <b>Matcha Cozy + Nước dừa Vinamilk</b> trước buổi đi bộ sáng</span>
+          <input type="checkbox" id="chkMatcha" class="w-4 h-4 accent-emerald-500">
+          <span class="text-xs text-slate-200">🍵 Uống <b>Matcha Cozy + Nước dừa Vinamilk</b> trước buổi đi bộ sáng (Cách xa giờ uống thuốc bổ 2 tiếng)</span>
         </label>
 
         <label class="flex items-center gap-3 bg-slate-800/70 p-3 rounded-xl cursor-pointer">
-          <input type="checkbox" id="chkWalk" onchange="saveHabitState()" class="w-4 h-4 accent-emerald-500">
+          <input type="checkbox" id="chkWalk" class="w-4 h-4 accent-emerald-500">
           <span class="text-xs text-slate-200">🏃 Đi bộ dốc <b>40 phút (4.5 km/h)</b> - thả lỏng tay không tì đè cổ tay</span>
         </label>
 
         <label class="flex items-center gap-3 bg-slate-800/70 p-3 rounded-xl cursor-pointer">
-          <input type="checkbox" id="chkSteps" onchange="saveHabitState()" class="w-4 h-4 accent-emerald-500">
+          <input type="checkbox" id="chkSteps" class="w-4 h-4 accent-emerald-500">
           <span class="text-xs text-slate-200">👣 Đạt mục tiêu <b>10,000 - 13,000 bước chân</b> trong ngày</span>
         </label>
 
         <label class="flex items-center gap-3 bg-slate-800/70 p-3 rounded-xl cursor-pointer">
-          <input type="checkbox" id="chkWater" onchange="saveHabitState()" class="w-4 h-4 accent-emerald-500">
+          <input type="checkbox" id="chkWater" class="w-4 h-4 accent-emerald-500">
           <span class="text-xs text-slate-200">💧 Uống đủ <b>2.5 - 3 Lít nước lọc</b> + Ăn nhạt (< 1500mg Natri) để xả nước mặt</span>
         </label>
 
         <label class="flex items-center gap-3 bg-slate-800/70 p-3 rounded-xl cursor-pointer">
-          <input type="checkbox" id="chkPosture" onchange="saveHabitState()" class="w-4 h-4 accent-emerald-500">
+          <input type="checkbox" id="chkPosture" class="w-4 h-4 accent-emerald-500">
           <span class="text-xs text-slate-200">🗿 Tập tư thế lưỡi <b>Mewing</b> (áp sát toàn bộ lưỡi lên vòm họng) & giữ thẳng cổ</span>
         </label>
       </div>
 
-      <!-- Theo dõi mức độ đau cổ tay & Lịch tập thay thế -->
       <div class="card p-5 space-y-4">
         <h2 class="text-base font-bold text-amber-400 border-b border-slate-700 pb-2">🩹 Theo Dõi Phục Hồi Chấn Thương Cổ Tay</h2>
 
@@ -365,12 +444,12 @@
     </div>
   </div>
 
-  <!-- ================= BẢNG LỊCH SỬ TỔNG HỢP 30 NGÀY (LUÔN HIỂN THỊ DƯỚI CÙNG) ================= -->
+  <!-- ================= BẢNG LỊCH SỬ TỔNG HỢP 30 NGÀY ================= -->
   <div class="card p-5 mt-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-slate-700 pb-3 mb-4">
       <div>
         <h2 class="text-lg font-bold text-white">📅 Nhật Ký Tổng Hợp Hằng Ngày (Lưu Trực Tiếp Trên Máy)</h2>
-        <p class="text-xs text-slate-400">Lưu đồng bộ cả Calo, Đạm, Cân nặng, Vòng eo và Ảnh check-in của từng ngày.</p>
+        <p class="text-xs text-slate-400">Lưu đồng bộ Calo, Đạm, Cân nặng, Vòng eo, Thuốc bổ đã uống và Ảnh check-in của từng ngày.</p>
       </div>
       <div class="flex flex-wrap gap-2 w-full md:w-auto">
         <button onclick="saveDailyLog()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition flex-1 md:flex-none">
@@ -395,8 +474,7 @@
             <th class="py-2.5 px-2">Calo Nạp</th>
             <th class="py-2.5 px-2">Thâm hụt</th>
             <th class="py-2.5 px-2">Đạm (P)</th>
-            <th class="py-2.5 px-2">Carb (C)</th>
-            <th class="py-2.5 px-2">Béo (F)</th>
+            <th class="py-2.5 px-2">Thuốc bổ</th>
             <th class="py-2.5 px-2">Chi tiết món & Ảnh dáng</th>
           </tr>
         </thead>
@@ -407,16 +485,38 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'body_recomp_logs_v3';
+    const STORAGE_KEY = 'body_recomp_logs_v4';
     const PHYSIQUE_KEY = 'body_recomp_physique_v3';
+    const SUPP_LIST_KEY = 'body_recomp_supp_list_v4';
     const API_KEY_STORAGE = 'gemini_food_api_key';
 
     let scannedMealsToday = [];
     let currentImageBase64 = null;
     let currentImageMime = 'image/jpeg';
-
     let todayBodyPhoto = null;
     let todayJawPhoto = null;
+
+    // Danh sách thuốc bổ mặc định (Thiết kế riêng cho gói DHC trong ảnh, giảm mỡ mặt & lành gân cổ tay)
+    const defaultSupplements = [
+      { id: 'dhc_vitc', name: '🍊 Viên uống DHC Vitamin C / Multi-Vitamin', time: '09:00', note: 'Uống sau ăn sáng (Tổng hợp Collagen phục hồi dây chằng cổ tay, cách ly Matcha >1.5h)', checked: false },
+      { id: 'dhc_zinc', name: '⚡ Viên uống DHC Kẽm (Zinc) / Khoáng chất', time: '12:30', note: 'Uống ngay sau bữa trưa (Tăng Testosterone giữ cơ, phục hồi mô gân, không uống lúc đói)', checked: false },
+      { id: 'omega3', name: '🐟 Dầu cá Omega-3 (Kháng viêm khớp)', time: '12:30', note: 'Uống ngay sau bữa trưa có chất béo (Giảm sưng viêm khớp cổ tay & đốt mỡ nội tạng)', checked: false },
+      { id: 'collagen_joint', name: '🦴 Glucosamine / Collagen Type II (Bổ khớp)', time: '19:30', note: 'Uống sau bữa tối (Tái tạo sụn và bao hoạt dịch cổ tay)', checked: false },
+      { id: 'magnesium', name: '🌙 Magie (Magnesium) / DHC Rau củ', time: '21:30', note: 'Uống trước ngủ 60p (Giãn cơ, hạ Cortisol chống tích nước mặt, giữ điểm ngủ 96)', checked: false }
+    ];
+
+    // Danh sách các mốc giờ nhắc nhở trong ngày
+    const dailyReminders = [
+      { time: '06:45', title: '⚖️ Cân sáng & Check-in Góc Cằm', desc: 'Cân sau khi đi vệ sinh, chụp ảnh Body/Jawline khi bụng rỗng và uống 300ml nước ấm.' },
+      { time: '07:15', title: '🍵 Pha Matcha Cozy + Nước Dừa Vinamilk', desc: '0.5 thìa Matcha + 250ml Nước dừa lạnh uống trước buổi đi bộ dốc 15-20 phút.' },
+      { time: '08:30', title: '🥚 Bữa Sáng Cao Đạm (Cách xa Matcha)', desc: 'Ăn 3 quả trứng + 1 hộp Sữa tươi Cao đạm Vinamilk. Uống viên DHC Vitamin C lúc 09:00.' },
+      { time: '12:00', title: '🦐 Bữa Trưa + Thuốc Bổ DHC & Omega-3', desc: 'Ăn 200g Tôm hấp + 1.5 bát cơm + Rau luộc. Uống ngay viên DHC Kẽm & Omega-3 sau ăn.' },
+      { time: '16:30', title: '🥣 Bữa Phụ Chiều Trước Tập', desc: 'Ăn 1-2 hộp Sữa chua Cao đạm Vinamilk (100g) để nạp đạm và lợi khuẩn.' },
+      { time: '19:00', title: '🌙 Bữa Tối Nhạt Muối (Chống Sưng Mặt)', desc: 'Ăn 150g Tôm/Thịt nạc + 1 bát cơm. Hạn chế tối đa chấm nước mắm/muối để mặt thon gọn sáng mai.' },
+      { time: '22:15', title: '📲 Chốt Số Apple Health & Đi Ngủ', desc: 'Nhập số Bước chân, Active Calo vào App, bấm Lưu Ngày Hôm Nay và lên giường giữ điểm giấc ngủ 96!' }
+    ];
+
+    let supplements = JSON.parse(localStorage.getItem(SUPP_LIST_KEY) || 'null') || defaultSupplements;
 
     document.getElementById('datePicker').valueAsDate = new Date();
     document.getElementById('apiKeyInput').value = localStorage.getItem(API_KEY_STORAGE) || '';
@@ -425,18 +525,214 @@
       localStorage.setItem(API_KEY_STORAGE, document.getElementById('apiKeyInput').value.trim());
     }
 
-    // Chuyển đổi giữa 3 Tab
     function switchTab(tabId) {
-      ['tab-calo', 'tab-physique', 'tab-workout'].forEach(id => {
+      ['tab-calo', 'tab-physique', 'tab-supp', 'tab-workout'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
         document.getElementById('btn-' + id).classList.remove('active');
       });
       document.getElementById(tabId).classList.remove('hidden');
       document.getElementById('btn-' + tabId).classList.add('active');
       if (tabId === 'tab-physique') renderPhysiqueGallery();
+      if (tabId === 'tab-supp') { renderSupplements(); renderReminders(); }
     }
 
-    // Nén ảnh thông minh xuống chiều rộng 500px để lưu được hàng trăm ngày trong LocalStorage
+    // ================= HỆ THỐNG LỜI NHẮC THÔNG MINH THEO GIỜ THỰC TẾ =================
+    function updateLiveSmartBanner() {
+      const now = new Date();
+      const hr = now.getHours();
+      const min = now.getMinutes();
+      const curTime = `${String(hr).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+
+      let title = `⏰ Hiện tại là ${curTime} — Lời nhắc tự động`;
+      let msg = '';
+      let icon = '💡';
+
+      if (hr >= 5 && hr < 8) {
+        icon = '🍵';
+        msg = 'Buổi sáng: Hãy cân nặng khi bụng rỗng, pha 0.5 thìa Matcha Cozy + 250ml Nước dừa uống trước khi đi bộ dốc 40p! (Lưu ý: Chưa uống viên DHC lúc này).';
+      } else if (hr >= 8 && hr < 11) {
+        icon = '🍊';
+        msg = 'Sau ăn sáng: Đã cách xa ly Matcha sáng -> Hãy uống viên DHC Vitamin C để tổng hợp Collagen phục hồi dây chằng cổ tay và uống đủ 1 Lít nước lọc.';
+      } else if (hr >= 11 && hr < 14) {
+        icon = '💊';
+        msg = 'Khung giờ Bữa Trưa: Hãy ăn 150-200g Tôm hấp + Cơm vừa phải. Đừng quên uống viên DHC Kẽm & Omega-3 ngay sau bữa trưa để hấp thu tối đa!';
+      } else if (hr >= 14 && hr < 18) {
+        icon = '🥣';
+        msg = 'Buổi chiều: Nạp 1 hộp Sữa chua Cao đạm Vinamilk (100g) trước giờ tập/đi bộ. Nhớ giữ tư thế lưỡi Mewing áp sát vòm họng!';
+      } else if (hr >= 18 && hr < 21) {
+        icon = '🥗';
+        msg = 'Bữa tối chống sưng mặt: Ăn nhạt tối đa (không chấm mắm/muối mặn) để sáng mai khuôn mặt và vùng dưới cằm sắc nét nhất!';
+      } else {
+        icon = '🌙';
+        msg = 'Cuối ngày (sau 21h): Mở Apple Health kiểm tra số Bước chân & Active Calo, tích chọn các viên Thuốc bổ đã uống và bấm "Lưu Toàn Bộ Ngày Hôm Nay"!';
+      }
+
+      document.getElementById('bannerIcon').innerText = icon;
+      document.getElementById('bannerTimeTitle').innerText = title;
+      document.getElementById('bannerMessage').innerText = msg;
+    }
+
+    function enableBrowserNotifications() {
+      if (!("Notification" in window)) {
+        alert("Trình duyệt của bạn không hỗ trợ thông báo đẩy. Bạn có thể bấm nút 'Cài Vào Lịch iPhone (.ics)' ở Tab 3 để iPhone tự báo thức nhé!");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          document.getElementById('notifBtn').innerText = "✅ Đã Bật Nhắc Nhở";
+          document.getElementById('notifBtn').classList.replace('bg-orange-500', 'bg-emerald-600');
+          new Notification("🔥 Body Recomp Pro V4", {
+            body: "Đã kích hoạt lời nhắc uống Thuốc bổ DHC, uống nước và ăn chuẩn Macro mỗi ngày!"
+          });
+        }
+      });
+    }
+
+    // ================= QUẢN LÝ THUỐC BỔ (TAB 3) =================
+    function renderSupplements() {
+      const container = document.getElementById('supplementListContainer');
+      const doneCount = supplements.filter(s => s.checked).length;
+      document.getElementById('suppProgressText').innerText = `${doneCount}/${supplements.length}`;
+
+      container.innerHTML = supplements.map((s, idx) => `
+        <div class="flex items-start justify-between gap-2 p-3 rounded-xl border ${s.checked ? 'bg-purple-950/30 border-purple-500/50' : 'bg-slate-800/70 border-slate-700'}">
+          <label class="flex items-start gap-3 cursor-pointer flex-1">
+            <input type="checkbox" ${s.checked ? 'checked' : ''} onchange="toggleSupplement(${idx})" class="w-4 h-4 mt-1 accent-purple-500">
+            <div>
+              <div class="text-xs font-bold ${s.checked ? 'line-through text-slate-400' : 'text-white'}">
+                <span class="bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded text-[10px] mr-1">⏰ ${s.time}</span>
+                ${s.name}
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">${s.note}</div>
+            </div>
+          </label>
+          <button onclick="deleteSupplement(${idx})" class="text-slate-500 hover:text-rose-400 text-xs px-1">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function toggleSupplement(idx) {
+      supplements[idx].checked = !supplements[idx].checked;
+      localStorage.setItem(SUPP_LIST_KEY, JSON.stringify(supplements));
+      renderSupplements();
+    }
+
+    function resetSupplements() {
+      supplements.forEach(s => s.checked = false);
+      localStorage.setItem(SUPP_LIST_KEY, JSON.stringify(supplements));
+      renderSupplements();
+    }
+
+    function addCustomSupplement() {
+      const name = document.getElementById('newSuppName').value.trim();
+      const time = document.getElementById('newSuppTime').value || '12:30';
+      const note = document.getElementById('newSuppNote').value.trim() || 'Uống sau bữa ăn chính';
+      if (!name) { alert('Hãy nhập tên thuốc bổ / vitamin!'); return; }
+      supplements.push({ id: 'custom_' + Date.now(), name: '💊 ' + name, time, note, checked: false });
+      localStorage.setItem(SUPP_LIST_KEY, JSON.stringify(supplements));
+      document.getElementById('newSuppName').value = '';
+      document.getElementById('newSuppNote').value = '';
+      renderSupplements();
+    }
+
+    function deleteSupplement(idx) {
+      supplements.splice(idx, 1);
+      localStorage.setItem(SUPP_LIST_KEY, JSON.stringify(supplements));
+      renderSupplements();
+    }
+
+    function renderReminders() {
+      const box = document.getElementById('remindersListContainer');
+      box.innerHTML = dailyReminders.map(r => `
+        <div class="flex items-start gap-3 bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
+          <div class="bg-orange-500/20 text-orange-400 font-extrabold px-2 py-1 rounded-lg text-xs whitespace-nowrap">${r.time}</div>
+          <div>
+            <div class="font-bold text-slate-200">${r.title}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">${r.desc}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Xuất file .ics để cài thẳng toàn bộ lịch nhắc uống thuốc bổ & tập luyện vào ứng dụng Lịch (Calendar) của iPhone
+    function downloadICS() {
+      let ics = "BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//BodyRecompPro//VN\\n";
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      dailyReminders.forEach((r, idx) => {
+        const hm = r.time.replace(':','') + '00';
+        ics += "BEGIN:VEVENT\\n";
+        ics += `UID:recomp-${idx}@bodyrecomp.local\\n`;
+        ics += `DTSTART;TZID=Asia/Ho_Chi_Minh:${today}T${hm}\\n`;
+        ics += `RRULE:FREQ=DAILY\\n`;
+        ics += `SUMMARY:${r.title}\\n`;
+        ics += `DESCRIPTION:${r.desc}\\n`;
+        ics += "BEGIN:VALARM\\nTRIGGER:-PT0M\\nACTION:DISPLAY\\nDESCRIPTION:Reminder\\nEND:VALARM\\n";
+        ics += "END:VEVENT\\n";
+      });
+      ics += "END:VCALENDAR";
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'lich-nhac-thuoc-bo-body-recomp.ics';
+      a.click();
+    }
+
+    // AI Đọc ảnh vỏ gói thuốc bổ DHC / Vitamin
+    async function analyzeSuppPhotoAI() {
+      const apiKey = document.getElementById('apiKeyInput').value.trim();
+      if (!apiKey) { alert('⚠️ Hãy dán Gemini API Key ở thanh trên cùng trước nhé!'); return; }
+      const fileInput = document.getElementById('suppPhotoInput');
+      if (!fileInput.files[0]) { alert('📸 Hãy chọn ảnh chụp vỏ gói thuốc bổ / DHC trước nhé!'); return; }
+
+      const btn = document.getElementById('analyzeSuppBtn');
+      const resBox = document.getElementById('aiSuppResult');
+      btn.disabled = true;
+      btn.innerText = '⏳ Đang đọc...';
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = 'Đang phân tích thành phần viên uống...';
+
+      compressImageFile(fileInput.files[0], 700, 0.8, async function(dataUrl) {
+        const base64 = dataUrl.split(',')[1];
+        const prompt = `Bạn là dược sĩ thể thao. Hãy đọc ảnh vỏ gói thực phẩm bổ sung/vitamin này và trả về JSON:
+{
+  "supp_name": "Tên viên uống (VD: DHC Vitamin B-Mix)",
+  "best_time": "Giờ uống tốt nhất (VD: 12:30)",
+  "dosage_note": "Liều lượng chuẩn & cách uống để không bị kỵ với trà xanh Matcha buổi sáng, hỗ trợ giảm mỡ và lành chấn thương cổ tay"
+}`;
+        try {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64 } }] }],
+              generationConfig: { responseMimeType: "application/json" }
+            })
+          });
+          const data = await response.json();
+          if (data.error) throw new Error(data.error.message);
+          const parsed = JSON.parse(data.candidates[0].content.parts[0].text);
+
+          supplements.push({
+            id: 'ai_' + Date.now(),
+            name: '💊 ' + parsed.supp_name,
+            time: parsed.best_time || '12:30',
+            note: parsed.dosage_note,
+            checked: false
+          });
+          localStorage.setItem(SUPP_LIST_KEY, JSON.stringify(supplements));
+          renderSupplements();
+
+          resBox.innerHTML = `<div class="text-emerald-400 font-bold">✅ Đã thêm "${parsed.supp_name}" vào lịch uống lúc ${parsed.best_time}!</div><div class="mt-1">${parsed.dosage_note}</div>`;
+        } catch (e) {
+          resBox.innerHTML = `<span class="text-rose-400">❌ Lỗi: ${e.message}</span>`;
+        } finally {
+          btn.disabled = false;
+          btn.innerText = 'AI Đọc Nhãn';
+        }
+      });
+    }
+
+    // Nén ảnh dùng chung
     function compressImageFile(file, maxWidth, quality, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -448,8 +744,7 @@
           canvas.height = img.height * scale;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const dataUrl = canvas.toDataURL('image/jpeg', quality);
-          callback(dataUrl);
+          callback(canvas.toDataURL('image/jpeg', quality));
         };
         img.src = e.target.result;
       };
@@ -472,14 +767,8 @@
 
     async function analyzeFoodPhoto() {
       const apiKey = document.getElementById('apiKeyInput').value.trim();
-      if (!apiKey) {
-        alert('⚠️ Bạn hãy bấm nút "Lấy Key Free" ở thanh trên cùng và dán Gemini API Key vào để dùng tính năng AI nhé!');
-        return;
-      }
-      if (!currentImageBase64) {
-        alert('📷 Hãy chọn hoặc chụp ảnh bữa ăn trước nhé!');
-        return;
-      }
+      if (!apiKey) { alert('⚠️ Hãy dán Gemini API Key ở thanh trên cùng trước nhé!'); return; }
+      if (!currentImageBase64) { alert('📷 Hãy chọn hoặc chụp ảnh bữa ăn trước nhé!'); return; }
 
       const btn = document.getElementById('analyzeBtn');
       const resultBox = document.getElementById('aiScanResult');
@@ -581,29 +870,23 @@ Trả về JSON hợp lệ theo cấu trúc:
 
     async function analyzePhysiqueAI() {
       const apiKey = document.getElementById('apiKeyInput').value.trim();
-      if (!apiKey) {
-        alert('⚠️ Hãy nhập Gemini API Key ở thanh trên cùng trước nhé!');
-        return;
-      }
+      if (!apiKey) { alert('⚠️ Hãy nhập Gemini API Key ở thanh trên cùng trước nhé!'); return; }
       const targetPhoto = todayBodyPhoto || todayJawPhoto;
-      if (!targetPhoto) {
-        alert('📸 Bạn hãy tải lên ít nhất 1 ảnh Dáng người hoặc ảnh Góc cằm hôm nay để AI phân tích nhé!');
-        return;
-      }
+      if (!targetPhoto) { alert('📸 Bạn hãy tải lên ít nhất 1 ảnh Dáng người hoặc ảnh Góc cằm hôm nay để AI phân tích nhé!'); return; }
 
       const btn = document.getElementById('aiPhysiqueBtn');
       const resBox = document.getElementById('aiPhysiqueResult');
       btn.disabled = true;
-      btn.innerText = '⏳ AI đang phân tích tỷ lệ mỡ & đường nét...';
+      btn.innerText = '⏳ AI đang phân tích...';
       resBox.classList.remove('hidden');
       resBox.innerHTML = 'Đang quét hình thể...';
 
       const parts = [{
-        text: `Bạn là HLV thể hình chuyên nghiệp. Người dùng cao 1.65m, nặng ${document.getElementById('weightInput').value}kg, vòng eo ${document.getElementById('waistInput').value}cm. Hãy quan sát ảnh vóc dáng/khuôn mặt này và trả về JSON:
+        text: `Bạn là HLV thể hình. Người dùng cao 1.65m, nặng ${document.getElementById('weightInput').value}kg, eo ${document.getElementById('waistInput').value}cm. Trả về JSON:
 {
-  "estimated_bf": số_phần_trăm_mỡ_ước_tính (VD: 19.5),
-  "jawline_score": "Đánh giá độ sắc nét vùng cằm / độ tích nước mặt (trên thang 10)",
-  "muscle_comment": "Nhận xét ngắn gọn về độ nét cơ bắp và lời khuyên điều chỉnh tuần tới"
+  "estimated_bf": số_phần_trăm_mỡ_ước_tính,
+  "jawline_score": "Đánh giá độ nét vùng cằm trên thang 10",
+  "muscle_comment": "Nhận xét ngắn gọn và lời khuyên tuần tới"
 }`
       }];
       if (todayBodyPhoto) parts.push({ inline_data: { mime_type: 'image/jpeg', data: todayBodyPhoto.split(',')[1] } });
@@ -620,10 +903,7 @@ Trả về JSON hợp lệ theo cấu trúc:
         const parsed = JSON.parse(data.candidates[0].content.parts[0].text);
 
         if (parsed.estimated_bf) document.getElementById('bfInput').value = parsed.estimated_bf;
-        resBox.innerHTML = `
-          <div class="text-cyan-400 font-bold">📊 Ước tính Bodyfat: ~${parsed.estimated_bf}% | Điểm góc cằm: ${parsed.jawline_score}</div>
-          <div class="text-slate-300 mt-1">💡 ${parsed.muscle_comment}</div>
-        `;
+        resBox.innerHTML = `<div class="text-cyan-400 font-bold">📊 Ước tính Bodyfat: ~${parsed.estimated_bf}% | Điểm góc cằm: ${parsed.jawline_score}</div><div class="text-slate-300 mt-1">💡 ${parsed.muscle_comment}</div>`;
       } catch (e) {
         resBox.innerHTML = `<span class="text-rose-400">❌ Lỗi: ${e.message}</span>`;
       } finally {
@@ -640,7 +920,7 @@ Trả về JSON hợp lệ theo cấu trúc:
       const bf = parseFloat(document.getElementById('bfInput').value) || 20;
 
       if (!todayBodyPhoto && !todayJawPhoto) {
-        alert('📸 Bạn hãy chọn ít nhất 1 ảnh (Dáng người hoặc Góc cằm) trước khi bấm Lưu ảnh Check-in nhé!');
+        alert('📸 Hãy chọn ít nhất 1 ảnh trước khi bấm Lưu ảnh Check-in nhé!');
         return;
       }
 
@@ -657,7 +937,7 @@ Trả về JSON hợp lệ theo cấu trúc:
         renderPhysiqueGallery();
         alert('✅ Đã lưu ảnh vóc dáng & số đo ngày ' + date + '!');
       } catch (err) {
-        alert('⚠️ Bộ nhớ trình duyệt đã đầy, hãy xóa bớt một số ảnh cũ trong Album nhé!');
+        alert('⚠️ Bộ nhớ trình duyệt đã đầy, hãy xóa bớt ảnh cũ!');
       }
     }
 
@@ -668,19 +948,18 @@ Trả về JSON hợp lệ theo cấu trúc:
       const afterSel = document.getElementById('afterDateSelect');
 
       if (list.length === 0) {
-        gallery.innerHTML = `<div class="col-span-4 py-6 text-center text-slate-500 text-xs">Chưa có ảnh check-in nào. Hãy chụp ảnh buổi sáng khi bụng rỗng để bắt đầu theo dõi sự thay đổi!</div>`;
+        gallery.innerHTML = `<div class="col-span-4 py-6 text-center text-slate-500 text-xs">Chưa có ảnh check-in nào.</div>`;
         beforeSel.innerHTML = '<option>Chưa có dữ liệu</option>';
         afterSel.innerHTML = '<option>Chưa có dữ liệu</option>';
         return;
       }
 
-      // Đổ dữ liệu vào 2 ô chọn ngày Before / After
       const optionsHtml = list.map(item => `<option value="${item.date}">${item.date} (${item.weight}kg - Eo ${item.waist}cm)</option>`).join('');
       beforeSel.innerHTML = optionsHtml;
       afterSel.innerHTML = optionsHtml;
       if (list.length > 1) {
-        beforeSel.value = list[list.length - 1].date; // Ngày cũ nhất
-        afterSel.value = list[0].date; // Ngày mới nhất
+        beforeSel.value = list[list.length - 1].date;
+        afterSel.value = list[0].date;
       }
       updateComparisonView();
 
@@ -688,11 +967,11 @@ Trả về JSON hợp lệ theo cấu trúc:
         <div class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 space-y-2">
           <div class="flex justify-between items-center text-xs">
             <span class="font-bold text-cyan-400">${item.date}</span>
-            <button onclick="deletePhysiqueEntry(${idx})" class="text-rose-400 hover:text-rose-300">✕</button>
+            <button onclick="deletePhysiqueEntry(${idx})" class="text-rose-400">✕</button>
           </div>
           <div class="grid grid-cols-2 gap-1.5">
-            ${item.bodyPhoto ? `<img src="${item.bodyPhoto}" class="h-28 w-full object-cover rounded-lg" title="Body"/>` : `<div class="h-28 bg-slate-950 rounded-lg flex items-center justify-center text-[10px] text-slate-600">Không có ảnh Body</div>`}
-            ${item.jawPhoto ? `<img src="${item.jawPhoto}" class="h-28 w-full object-cover rounded-lg" title="Jawline"/>` : `<div class="h-28 bg-slate-950 rounded-lg flex items-center justify-center text-[10px] text-slate-600">Không có ảnh Cằm</div>`}
+            ${item.bodyPhoto ? `<img src="${item.bodyPhoto}" class="h-28 w-full object-cover rounded-lg"/>` : `<div class="h-28 bg-slate-950 rounded-lg flex items-center justify-center text-[10px] text-slate-600">Trống</div>`}
+            ${item.jawPhoto ? `<img src="${item.jawPhoto}" class="h-28 w-full object-cover rounded-lg"/>` : `<div class="h-28 bg-slate-950 rounded-lg flex items-center justify-center text-[10px] text-slate-600">Trống</div>`}
           </div>
           <div class="text-[11px] text-slate-300 flex justify-between">
             <span>⚖️ <b>${item.weight}kg</b></span>
@@ -707,20 +986,17 @@ Trả về JSON hợp lệ theo cấu trúc:
       const list = JSON.parse(localStorage.getItem(PHYSIQUE_KEY) || '[]');
       if (list.length === 0) return;
       const type = document.getElementById('compareTypeSelect').value;
-      const bDate = document.getElementById('beforeDateSelect').value;
-      const aDate = document.getElementById('afterDateSelect').value;
-
-      const bItem = list.find(x => x.date === bDate) || list[list.length - 1];
-      const aItem = list.find(x => x.date === aDate) || list[0];
+      const bItem = list.find(x => x.date === document.getElementById('beforeDateSelect').value) || list[list.length - 1];
+      const aItem = list.find(x => x.date === document.getElementById('afterDateSelect').value) || list[0];
 
       const bPhoto = type === 'body' ? bItem.bodyPhoto : bItem.jawPhoto;
       const aPhoto = type === 'body' ? aItem.bodyPhoto : aItem.jawPhoto;
 
-      document.getElementById('beforeImgBox').innerHTML = bPhoto ? `<img src="${bPhoto}" class="h-full w-full object-cover"/>` : 'Chưa có ảnh mục này';
-      document.getElementById('afterImgBox').innerHTML = aPhoto ? `<img src="${aPhoto}" class="h-full w-full object-cover"/>` : 'Chưa có ảnh mục này';
+      document.getElementById('beforeImgBox').innerHTML = bPhoto ? `<img src="${bPhoto}" class="h-full w-full object-cover"/>` : 'Chưa có ảnh';
+      document.getElementById('afterImgBox').innerHTML = aPhoto ? `<img src="${aPhoto}" class="h-full w-full object-cover"/>` : 'Chưa có ảnh';
 
-      document.getElementById('beforeMeta').innerText = `Ngày ${bItem.date}: ${bItem.weight}kg | Eo ${bItem.waist}cm | BF ${bItem.bf}%`;
-      document.getElementById('afterMeta').innerText = `Ngày ${aItem.date}: ${aItem.weight}kg | Eo ${aItem.waist}cm | BF ${aItem.bf}%`;
+      document.getElementById('beforeMeta').innerText = `${bItem.date}: ${bItem.weight}kg | Eo ${bItem.waist}cm`;
+      document.getElementById('afterMeta').innerText = `${aItem.date}: ${aItem.weight}kg | Eo ${aItem.waist}cm`;
     }
 
     function deletePhysiqueEntry(idx) {
@@ -730,33 +1006,18 @@ Trả về JSON hợp lệ theo cấu trúc:
       renderPhysiqueGallery();
     }
 
-    // ================= TAB 3: CỔ TAY & CHECKLIST =================
+    // ================= TAB 4: CỔ TAY =================
     function updateWristAdvice() {
       const pain = parseInt(document.getElementById('wristPain').value);
       document.getElementById('wristPainVal').innerText = pain;
       const box = document.getElementById('wristWorkoutGuide');
       if (pain >= 4) {
-        box.innerHTML = `
-          <div class="font-bold text-rose-400">🛑 Mức đau ${pain}/10 (Giai đoạn Nghỉ Kháng Lực Tay):</div>
-          <div>• <b>Cardio đốt mỡ:</b> Đi bộ dốc 40 phút (4.5 km/h), đánh tay tự nhiên, tuyệt đối không nắm ghì vào tay vịn máy chạy.</div>
-          <div>• <b>Bài tập thay thế:</b> Đạp đùi (Leg Press), Đá đùi trước (Leg Extension), Móc đùi sau (Leg Curl), Nhón bắp chuối và Plank bằng cẳng tay.</div>
-        `;
+        box.innerHTML = `<div class="font-bold text-rose-400">🛑 Mức đau ${pain}/10 (Nghỉ Kháng Lực Tay):</div><div>• Đi bộ dốc 40 phút (4.5 km/h) thả lỏng tay + Tập Leg Press, Đá đùi, Gập đùi, Plank bằng cẳng tay. Kết hợp uống đủ DHC Vitamin C, Kẽm & Omega-3 ở Tab 3!</div>`;
       } else if (pain >= 1) {
-        box.innerHTML = `
-          <div class="font-bold text-amber-400">⚠️ Mức đau ${pain}/10 (Bắt đầu tập nhẹ cùng Đai quấn cổ tay - Wrist Wraps):</div>
-          <div>• Dùng <b>quai đeo cổ tay (Wrist Cuffs) móc vào máy kéo cáp</b> để tập Bay vai (Lateral Raise), Kéo xô và Ép ngực mà không cần bàn tay cầm tạ.</div>
-          <div>• Nếu cầm tạ đơn (Dumbbell), luôn giữ cổ tay thẳng trục với cẳng tay (Neutral Grip). Không dùng thanh đòn thẳng (Barbell).</div>
-        `;
+        box.innerHTML = `<div class="font-bold text-amber-400">⚠️ Mức đau ${pain}/10 (Tập nhẹ với Đai quấn cổ tay):</div><div>• Dùng Wrist Cuffs móc cáp tập vai/ngực/lưng hoặc tạ đơn cầm trục trung tính (Neutral Grip).</div>`;
       } else {
-        box.innerHTML = `
-          <div class="font-bold text-emerald-400">✅ Mức đau 0/10 (Cổ tay đã hồi phục hoàn toàn):</div>
-          <div>• Khởi động kỹ khớp cổ tay 5 phút trước khi tập nặng. Có thể áp dụng Progressive Overload toàn thân để tăng cơ tối đa!</div>
-        `;
+        box.innerHTML = `<div class="font-bold text-emerald-400">✅ Mức đau 0/10 (Hồi phục hoàn toàn):</div><div>• Khởi động kỹ khớp cổ tay 5 phút và tập Progressive Overload toàn thân!</div>`;
       }
-    }
-
-    function saveHabitState() {
-      // Tự động ghi nhận trạng thái checklist
     }
 
     // ================= TÍNH TOÁN MACRO HẰNG NGÀY =================
@@ -803,11 +1064,14 @@ Trả về JSON hợp lệ theo cấu trúc:
       const sodium = Math.round((shrimp/100)*110 + egg*70 + eggWhite*55 + yogurt*37 + milk*90 + (coco/100)*15.7 + milo*95 + scanSodium);
       const addedSugar = ((coco / 100) * 1.6 + milo * 10).toFixed(1);
 
+      const suppDone = `${supplements.filter(s => s.checked).length}/${supplements.length}`;
+
       return {
         date: document.getElementById('datePicker').value,
         weight, waist, activeCal, steps, mode, bmr, tdee,
         goalCal, goalPro, goalCarb, goalFat,
         cal, pro, carb, fat, sodium, addedSugar,
+        suppDone,
         hasPhoto: !!(todayBodyPhoto || todayJawPhoto),
         scannedMeals: [...scannedMealsToday],
         items: { shrimp, egg, eggWhite, yogurt, milk, matcha, coco, milo, rice }
@@ -863,7 +1127,7 @@ Trả về JSON hợp lệ theo cấu trúc:
         ? `Còn ăn thêm: ${diffCal} kcal (Thâm hụt: -${deficitReal} kcal)`
         : `Vượt mục tiêu: +${Math.abs(diffCal)} kcal`;
 
-      let advice = `🍵 <b>Combo Matcha Nước Dừa sáng: ${Math.round(d.items.matcha * 12 + (d.items.coco / 100) * 15.2)} kcal</b>.<br>`;
+      let advice = `🍵 <b>Combo Matcha Nước Dừa sáng: ${Math.round(d.items.matcha * 12 + (d.items.coco / 100) * 15.2)} kcal</b> (Nhớ uống Thuốc bổ DHC cách xa ly Matcha >2 tiếng).<br>`;
       if (d.pro < d.goalPro - 10) advice += `• 🥩 <b>Thiếu ${d.goalPro - d.pro}g Đạm:</b> Tăng thêm Tôm hấp hoặc Lòng trắng trứng.<br>`;
       else advice += `• ✅ <b>Đạm đạt chuẩn (${d.pro}g):</b> Tối ưu giữ cơ & lành gân cổ tay!<br>`;
       if (d.fat > d.goalFat + 3) advice += `• ⚠️ <b>Vượt Chất béo (${d.fat}g/${d.goalFat}g):</b> Giảm 1 hộp sữa chua hoặc đồ chiên xào.`;
@@ -888,7 +1152,7 @@ Trả về JSON hợp lệ theo cấu trúc:
       localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
       if (todayBodyPhoto || todayJawPhoto) savePhysiqueCheckin();
       renderHistory();
-      alert('✅ Đã lưu toàn bộ nhật ký ngày ' + d.date + ' thành công!');
+      alert('✅ Đã lưu toàn bộ nhật ký (Calo, Vóc dáng & Thuốc bổ) ngày ' + d.date + '!');
     }
 
     function loadDayData() {
@@ -918,7 +1182,7 @@ Trả về JSON hợp lệ theo cấu trúc:
       const logs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
       const tbody = document.getElementById('historyTableBody');
       if (logs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="py-4 text-center text-slate-500">Chưa có ngày nào được lưu.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-500">Chưa có ngày nào được lưu.</td></tr>`;
         return;
       }
       tbody.innerHTML = logs.map(l => {
@@ -935,8 +1199,7 @@ Trả về JSON hợp lệ theo cấu trúc:
             <td class="py-2.5 px-2 font-bold text-white">${l.cal} kcal</td>
             <td class="py-2.5 px-2">${diffText}</td>
             <td class="py-2.5 px-2 text-blue-400 font-bold">${l.pro}g</td>
-            <td class="py-2.5 px-2 text-emerald-400">${l.carb}g</td>
-            <td class="py-2.5 px-2 text-amber-400">${l.fat}g</td>
+            <td class="py-2.5 px-2 text-purple-300 font-bold">💊 ${l.suppDone || '0/5'}</td>
             <td class="py-2.5 px-2 text-slate-400">${summary}</td>
           </tr>
         `;
@@ -946,14 +1209,14 @@ Trả về JSON hợp lệ theo cấu trúc:
     function exportCSV() {
       const logs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
       if (logs.length === 0) { alert('Chưa có dữ liệu!'); return; }
-      let csv = 'Ngay,CanNang(kg),VongEo(cm),BuocChan,ActiveCalo,TDEE,CaloNap,ChenhLechTDEE,Dam(g),Carb(g),Beo(g),MuoiNatri(mg)\n';
+      let csv = 'Ngay,CanNang(kg),VongEo(cm),BuocChan,ActiveCalo,TDEE,CaloNap,ChenhLechTDEE,Dam(g),Carb(g),Beo(g),MuoiNatri(mg),ThuocBo\\n';
       logs.forEach(l => {
-        csv += `${l.date},${l.weight},${l.waist || ''},${l.steps},${l.activeCal},${l.tdee},${l.cal},${l.cal - l.tdee},${l.pro},${l.carb},${l.fat},${l.sodium}\n`;
+        csv += `${l.date},${l.weight},${l.waist || ''},${l.steps},${l.activeCal},${l.tdee},${l.cal},${l.cal - l.tdee},${l.pro},${l.carb},${l.fat},${l.sodium},${l.suppDone || ''}\\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'nhat-ky-body-recomp-pro.csv';
+      a.download = 'nhat-ky-body-recomp-v4.csv';
       a.click();
     }
 
@@ -964,10 +1227,19 @@ Trả về JSON hợp lệ theo cấu trúc:
       }
     }
 
+    updateLiveSmartBanner();
+    setInterval(updateLiveSmartBanner, 60000);
     updateTracker();
     updateWristAdvice();
+    renderSupplements();
+    renderReminders();
     renderHistory();
-    renderPhysiqueGallery();
   </script>
 </body>
 </html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_v4)
+
+print("Created index.html V4 successfully.")
