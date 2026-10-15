@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Body Recomp Pro V7 - Chuẩn Key AQ & Gemini 3.8 Flash</title>
+  <title>Body Recomp Pro V8 - AI Photo, Text & Manual Calo Tracker</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -35,7 +35,7 @@
   <div class="mb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
     <div>
       <h1 class="text-2xl font-extrabold text-white flex items-center gap-2">
-        🔥 Body Recomp Pro V7 (Hỗ Trợ Key AQ... & Gemini 3.8 Flash)
+        🔥 Body Recomp Pro V8 (Quét Ảnh • Gõ Chữ Tự Nhận Diện • Nhập Tay)
       </h1>
       <p class="text-slate-400 text-xs mt-1">
         Hồ sơ: Cao 1.65m • Nặng gốc 65.25kg (BMI 23.96) • Mục tiêu: Bodyfat < 15%, Jawline sắc nét, Lành gân cổ tay
@@ -52,33 +52,33 @@
     </div>
   </div>
 
-  <!-- KHUNG CÀI ĐẶT & KIỂM TRA GEMINI API KEY (HỖ TRỢ CẢ AQ... VÀ AIza...) -->
+  <!-- KHUNG CÀI ĐẶT & KIỂM TRA GEMINI API KEY -->
   <div class="card p-4 mb-6 bg-slate-900/95 border-2 border-cyan-500/40 space-y-2.5">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
       <div class="text-xs text-slate-200">
-        🔑 <b>Cài đặt Gemini API Key (Không cần Billing):</b> Hỗ trợ chuẩn Auth Key mới (<code>AQ.Ab8...</code>) và <code>AIza...</code> với Model <b>gemini-3.8-flash</b>!
+        🔑 <b>Cài đặt Gemini API Key (Tuỳ chọn cho tính năng AI):</b> Nếu không dùng Key, bạn vẫn dùng được chế độ <b>"⚡ Tự Nhận Diện Món Bằng Chữ (Offline)"</b> và <b>"✍️ Nhập Số Tay"</b> bên dưới!
       </div>
       <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
         <select id="modelSelect" onchange="cleanAndSaveKey()" class="bg-slate-950 border border-slate-600 rounded-xl px-2.5 py-2 text-xs text-emerald-400 font-bold">
-          <option value="gemini-3.8-flash" selected>⚡ gemini-3.8-flash (Chuẩn mới nhất)</option>
+          <option value="gemini-3.8-flash" selected>⚡ gemini-3.8-flash</option>
           <option value="gemini-3.0-flash">🚀 gemini-3.0-flash</option>
           <option value="gemini-2.5-flash">🔄 gemini-2.5-flash</option>
         </select>
-        <input type="text" id="apiKeyInput" placeholder="Dán mã AQ.Ab8... hoặc AIza... vào đây" oninput="cleanAndSaveKey()" class="bg-slate-950 border border-slate-600 rounded-xl px-3 py-2 text-xs text-emerald-300 font-mono flex-1 md:w-64">
-        <button onclick="testAndAutoDetectModel()" id="testKeyBtn" class="bg-emerald-600 hover:bg-emerald-500 text-xs px-3.5 py-2 rounded-xl text-white font-bold whitespace-nowrap transition">
-          ✅ Kiểm Tra & Lưu Key
+        <input type="text" id="apiKeyInput" placeholder="Dán mã AQ.Ab8... hoặc AIza..." oninput="cleanAndSaveKey()" class="bg-slate-950 border border-slate-600 rounded-xl px-3 py-2 text-xs text-emerald-300 font-mono flex-1 md:w-56">
+        <button onclick="testAndAutoDetectModel()" id="testKeyBtn" class="bg-emerald-600 hover:bg-emerald-500 text-xs px-3 py-2 rounded-xl text-white font-bold whitespace-nowrap transition">
+          ✅ Kiểm Tra Key
         </button>
       </div>
     </div>
     <div id="apiKeyStatusBox" class="text-xs text-slate-400">
-      Trạng thái: <span id="activeModelLabel" class="text-amber-400 font-semibold">Sẵn sàng nhận mã AQ... cùng Model gemini-3.8-flash</span>
+      Trạng thái: <span id="activeModelLabel" class="text-amber-400 font-semibold">Đã bật sẵn Từ điển Nhận diện Món ăn Offline + Hỗ trợ AI gemini-3.8-flash</span>
     </div>
   </div>
 
   <!-- Thanh Chuyển 4 Tab Chức Năng -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
     <button onclick="switchTab('tab-calo')" id="btn-tab-calo" class="tab-btn active card py-3 px-2 text-xs font-bold text-center transition">
-      🍽️ 1. Dinh Dưỡng & Quét Đồ Ăn
+      🍽️ 1. Dinh Dưỡng & Nhập Món
     </button>
     <button onclick="switchTab('tab-physique')" id="btn-tab-physique" class="tab-btn card py-3 px-2 text-xs font-bold text-center text-slate-300 transition">
       📸 2. Nhật Ký Vóc Dáng & Cằm
@@ -91,43 +91,90 @@
     </button>
   </div>
 
-  <!-- ================= TAB 1: DINH DƯỠNG & QUÉT ẢNH BỮA ĂN ================= -->
+  <!-- ================= TAB 1: DINH DƯỠNG, GÕ CHỮ TỰ NHẬN DIỆN & QUÉT ẢNH ================= -->
   <div id="tab-calo" class="space-y-6">
 
-    <!-- Khung Quét Ảnh Bữa Ăn Bằng AI -->
-    <div class="card p-5 border-2 border-orange-500/40 bg-gradient-to-br from-slate-900 to-slate-800">
-      <div class="mb-3">
-        <h2 class="text-lg font-bold text-orange-400">📸 Quét Ảnh Bữa Ăn / Nhãn Bao Bì / Gói Thuốc Bổ Bằng AI</h2>
-        <p class="text-xs text-slate-300">Chụp ảnh mâm cơm, bát phở, đồ uống -> AI (gemini-3.8-flash) tự động bóc tách Calo, Đạm, Carb, Béo, Muối và cộng vào hôm nay.</p>
+    <!-- KHUNG TÍCH HỢP 3 TRONG 1: CÓ ẢNH HOẶC KHÔNG CÓ ẢNH ĐỀU NHẬN DIỆN ĐƯỢC -->
+    <div class="card p-5 border-2 border-orange-500/40 bg-gradient-to-br from-slate-900 to-slate-800 space-y-4">
+      <div>
+        <h2 class="text-lg font-bold text-orange-400">🍽️ Thêm Bữa Ăn Thông Minh (Có Ảnh Hoặc Không Có Ảnh Đều Được!)</h2>
+        <p class="text-xs text-slate-300">
+          • <b>Cách 1 (Không cần ảnh, không cần API):</b> Gõ tên món ăn vào ô chữ (VD: <i>"200g ức gà, 1 bát phở bò, 1 quả táo, 500 kcal"</i>) rồi bấm nút màu xanh <b>"⚡ Tự Nhận Diện Bằng Chữ (Offline)"</b>.<br>
+          • <b>Cách 2 (Dùng AI):</b> Chụp ảnh món ăn (hoặc chỉ gõ mô tả vào ô chữ) rồi bấm nút màu cam <b>"🤖 AI Phân Tích (Ảnh / Chữ)"</b>.<br>
+          • <b>Cách 3 (Điền số trực tiếp):</b> Nhập thẳng số Calo / Đạm vào hàng dưới cùng nếu bạn đã biết số trên vỏ hộp.
+        </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-4 items-center">
-        <div class="border-2 border-dashed border-slate-600 hover:border-orange-400 rounded-2xl p-4 text-center cursor-pointer transition" onclick="document.getElementById('foodImageInput').click()">
+      <div class="grid md:grid-cols-2 gap-4 items-stretch">
+        <!-- Cột trái: Khung ảnh (Tuỳ chọn - Không bắt buộc) -->
+        <div class="border-2 border-dashed border-slate-600 hover:border-orange-400 rounded-2xl p-4 text-center cursor-pointer transition flex flex-col justify-center relative" onclick="document.getElementById('foodImageInput').click()">
           <input type="file" id="foodImageInput" accept="image/*" class="hidden" onchange="previewFoodImage(event)">
-          <div id="uploadPlaceholder" class="py-4">
-            <div class="text-3xl mb-2">📷</div>
-            <div class="text-sm font-bold text-white">Bấm Chụp Ảnh hoặc Chọn Ảnh Món Ăn</div>
-            <div class="text-xs text-slate-400 mt-1">Hỗ trợ mâm cơm, đồ uống, hộp sữa, bảng Nutrition Facts...</div>
+          <div id="uploadPlaceholder" class="py-3">
+            <div class="text-3xl mb-1.5">📷</div>
+            <div class="text-sm font-bold text-white">Bấm Chụp Ảnh Món Ăn (Nếu có)</div>
+            <div class="text-xs text-emerald-400 font-medium mt-1">👉 Nếu KHÔNG có ảnh: Cứ để trống khung này và gõ chữ ở cột bên phải!</div>
           </div>
-          <img id="foodPreview" class="hidden max-h-48 mx-auto rounded-xl object-cover" />
+          <img id="foodPreview" class="hidden max-h-44 mx-auto rounded-xl object-cover" />
+          <button id="clearImgBtn" onclick="clearSelectedImage(event)" class="hidden absolute top-2 right-2 bg-rose-600 text-white text-[11px] px-2 py-1 rounded-lg">✕ Bỏ ảnh</button>
         </div>
 
-        <div class="space-y-3">
+        <!-- Cột phải: Khung gõ chữ tự nhận diện Calo -->
+        <div class="space-y-3 flex flex-col justify-between">
           <div>
-            <label class="text-xs text-slate-400">Ghi chú khẩu phần (VD: "Chỉ ăn nửa đĩa", "Tôm hấp 200g không chấm"):</label>
-            <input type="text" id="foodNoteInput" placeholder="VD: Bữa trưa, ăn hết thịt bỏ lại 1/2 cơm..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 mt-1 text-xs text-white">
+            <label class="text-xs font-bold text-emerald-300">✍️ Nhập tên món ăn / định lượng (Không cần ảnh):</label>
+            <textarea id="foodNoteInput" rows="2" placeholder="VD: 200g ức gà, 1 bát bún bò, 2 quả chuối, 150g thịt bò... (Hoặc gõ 'Bánh mì 350 kcal 15g đạm')" class="w-full bg-slate-950 border border-slate-600 focus:border-orange-400 rounded-xl px-3 py-2 mt-1 text-xs text-white"></textarea>
           </div>
-          <button id="analyzeBtn" onclick="analyzeFoodPhoto()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition shadow-lg shadow-orange-500/20">
-            🔍 Phân Tích Ảnh & Cộng Vào Hôm Nay
-          </button>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button onclick="smartOfflineTextParse()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg">
+              ⚡ Tự Nhận Diện Bằng Chữ (Không Cần Ảnh/API)
+            </button>
+            <button id="analyzeBtn" onclick="analyzeFoodPhotoOrTextAI()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-lg">
+              🤖 AI Phân Tích (Có Ảnh Hoặc Chỉ Chữ)
+            </button>
+          </div>
+
           <div id="aiScanResult" class="hidden bg-slate-950/90 border border-slate-700 rounded-xl p-3 text-xs space-y-1.5"></div>
         </div>
       </div>
 
-      <div id="scannedMealsSection" class="mt-4 pt-3 border-t border-slate-700/80 hidden">
+      <!-- HÀNG ĐIỀN TAY SỐ CALO & MACRO TRỰC TIẾP (KHI ĐÃ BIẾT SỐ HOẶC TỰ NHẬP) -->
+      <div class="pt-3 border-t border-slate-700/80">
+        <div class="text-xs font-bold text-cyan-300 mb-2">🔢 Hoặc Điền Tay Trực Tiếp Số Calo / Đạm (Không cần ảnh):</div>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-2 items-end">
+          <div class="col-span-2 md:col-span-2">
+            <label class="text-[11px] text-slate-400">Tên món ăn / đồ uống</label>
+            <input type="text" id="manualName" placeholder="VD: Phở bò / Bánh protein..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white mt-0.5">
+          </div>
+          <div>
+            <label class="text-[11px] text-orange-300 font-bold">🔥 Calo (kcal)*</label>
+            <input type="number" id="manualCal" placeholder="VD: 450" class="w-full bg-slate-900 border border-orange-500/50 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold mt-0.5">
+          </div>
+          <div>
+            <label class="text-[11px] text-blue-300">🥩 Đạm (g)</label>
+            <input type="number" id="manualPro" placeholder="VD: 25" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white mt-0.5">
+          </div>
+          <div>
+            <label class="text-[11px] text-emerald-300">🍚 Carb (g)</label>
+            <input type="number" id="manualCarb" placeholder="VD: 50" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white mt-0.5">
+          </div>
+          <div class="flex gap-1.5 items-end col-span-2 md:col-span-1">
+            <div class="flex-1">
+              <label class="text-[11px] text-amber-300">🥑 Béo (g)</label>
+              <input type="number" id="manualFat" placeholder="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white mt-0.5">
+            </div>
+            <button onclick="addManualMealEntry()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs whitespace-nowrap h-[30px]">
+              ➕ Cộng
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danh sách các món đã thêm (từ Chữ, Điền tay hoặc Ảnh) -->
+      <div id="scannedMealsSection" class="pt-3 border-t border-slate-700/80 hidden">
         <div class="flex justify-between items-center mb-2">
-          <span class="text-xs font-bold text-emerald-400">🍽️ Các món đã quét qua ảnh hôm nay:</span>
-          <button onclick="clearScannedMeals()" class="text-[11px] text-rose-400 hover:underline">Xóa hết món quét ảnh</button>
+          <span class="text-xs font-bold text-emerald-400">🍽️ Danh sách các món ăn thêm hôm nay (Từ Gõ chữ / Điền tay / Ảnh):</span>
+          <button onclick="clearScannedMeals()" class="text-[11px] text-rose-400 hover:underline">Xóa hết danh sách thêm</button>
         </div>
         <div id="scannedMealsList" class="space-y-1.5 text-xs"></div>
       </div>
@@ -476,17 +523,40 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'body_recomp_logs_v7';
+    const STORAGE_KEY = 'body_recomp_logs_v8';
     const PHYSIQUE_KEY = 'body_recomp_physique_v3';
     const SUPP_LIST_KEY = 'body_recomp_supp_list_v7';
     const API_KEY_STORAGE = 'gemini_food_api_key';
-    const DETECTED_MODEL_KEY = 'gemini_detected_working_model_v7';
+    const DETECTED_MODEL_KEY = 'gemini_detected_working_model_v8';
 
     let scannedMealsToday = [];
     let currentImageBase64 = null;
     let currentImageMime = 'image/jpeg';
     let todayBodyPhoto = null;
     let todayJawPhoto = null;
+
+    // TỪ ĐIỂN DINH DƯỠNG MÓN VIỆT OFFLINE (TỰ NHẬN DIỆN KHI KHÔNG CÓ ẢNH & KHÔNG CẦN API)
+    const OFFLINE_FOOD_DB = [
+      { keywords: ['ức gà', 'uc ga', 'gà luộc', 'thịt gà'], unitType: '100g', cal: 165, pro: 31, carb: 0, fat: 3.6, na: 74, label: 'Ức gà / Thịt gà nạc' },
+      { keywords: ['thịt bò', 'thit bo', 'bò xào', 'bắp bò', 'thăn bò'], unitType: '100g', cal: 215, pro: 26, carb: 0, fat: 11, na: 65, label: 'Thịt bò' },
+      { keywords: ['thịt lợn', 'thịt heo', 'thăn heo', 'nạc vai', 'heo luộc'], unitType: '100g', cal: 195, pro: 25, carb: 0, fat: 10, na: 70, label: 'Thịt heo nạc' },
+      { keywords: ['cá hồi', 'ca hoi'], unitType: '100g', cal: 208, pro: 20, carb: 0, fat: 13, na: 59, label: 'Cá hồi' },
+      { keywords: ['cá thu', 'cá basa', 'cá rô', 'cá hấp', 'cá kho', 'cá rán'], unitType: '100g', cal: 150, pro: 22, carb: 1, fat: 6, na: 120, label: 'Cá chế biến' },
+      { keywords: ['tôm', 'tom hap', 'tôm luộc'], unitType: '100g', cal: 99, pro: 24, carb: 0.2, fat: 0.3, na: 110, label: 'Tôm' },
+      { keywords: ['trứng', 'trung ga', 'trứng luộc', 'trứng ốp'], unitType: 'item', cal: 72, pro: 6.3, carb: 0.4, fat: 4.8, na: 70, label: 'Trứng gà' },
+      { keywords: ['phở bò', 'pho bo', 'phở gà', 'bát phở'], unitType: 'item', cal: 450, pro: 22, carb: 58, fat: 12, na: 950, label: 'Phở (1 bát)' },
+      { keywords: ['bún bò', 'bun bo', 'bún chả', 'bún riêu', 'bún cá', 'bát bún'], unitType: 'item', cal: 480, pro: 24, carb: 60, fat: 15, na: 1050, label: 'Bún (1 bát)' },
+      { keywords: ['bánh mì', 'banh mi'], unitType: 'item', cal: 380, pro: 15, carb: 48, fat: 14, na: 550, label: 'Bánh mì' },
+      { keywords: ['cơm trắng', 'bát cơm', 'chén cơm'], unitType: 'item', cal: 195, pro: 4, carb: 42, fat: 0.5, na: 10, label: 'Cơm trắng (1 bát)' },
+      { keywords: ['khoai lang', 'củ khoai'], unitType: '100g', cal: 86, pro: 1.6, carb: 20, fat: 0.1, na: 55, label: 'Khoai lang' },
+      { keywords: ['yến mạch', 'yen mach'], unitType: '100g', cal: 380, pro: 13, carb: 67, fat: 6.5, na: 10, label: 'Yến mạch' },
+      { keywords: ['chuối', 'quả chuối'], unitType: 'item', cal: 95, pro: 1.2, carb: 23, fat: 0.3, na: 1, label: 'Chuối (1 quả)' },
+      { keywords: ['táo', 'quả táo', 'ổi', 'cam'], unitType: 'item', cal: 75, pro: 0.8, carb: 18, fat: 0.2, na: 2, label: 'Trái cây (Táo/Ổi/Cam)' },
+      { keywords: ['rau luộc', 'bông cải', 'salad', 'dưa chuột', 'cải ngọt', 'rau xào'], unitType: 'item', cal: 65, pro: 3, carb: 10, fat: 1.5, na: 150, label: 'Đĩa rau xanh' },
+      { keywords: ['whey', 'muỗng whey', 'protein shake'], unitType: 'item', cal: 120, pro: 24, carb: 3, fat: 1.5, na: 80, label: 'Whey Protein (1 muỗng)' },
+      { keywords: ['americano', 'cà phê đen', 'cafe den'], unitType: 'item', cal: 10, pro: 0.5, carb: 2, fat: 0, na: 5, label: 'Americano không đường' },
+      { keywords: ['đậu phụ', 'đậu hũ', 'dau hu'], unitType: '100g', cal: 110, pro: 11, carb: 2, fat: 6, na: 15, label: 'Đậu phụ' }
+    ];
 
     const defaultSupplements = [
       {
@@ -528,7 +598,6 @@
     document.getElementById('apiKeyInput').value = localStorage.getItem(API_KEY_STORAGE) || '';
     if (localStorage.getItem(DETECTED_MODEL_KEY)) {
       document.getElementById('modelSelect').value = localStorage.getItem(DETECTED_MODEL_KEY);
-      document.getElementById('activeModelLabel').innerText = 'Đã kết nối Model: ' + localStorage.getItem(DETECTED_MODEL_KEY);
     }
 
     function cleanAndSaveKey() {
@@ -539,16 +608,230 @@
       localStorage.setItem(DETECTED_MODEL_KEY, document.getElementById('modelSelect').value);
     }
 
-    // Hỗ trợ cả Auth Key mới (AQ...) lẫn API Key truyền thống (AIza...)
+    // ================= TÍNH NĂNG MỚI: NHẬN DIỆN MÓN ĂN BẰNG CHỮ OFFLINE (KHÔNG CẦN ẢNH, KHÔNG CẦN API) =================
+    function smartOfflineTextParse() {
+      const text = document.getElementById('foodNoteInput').value.trim();
+      const resultBox = document.getElementById('aiScanResult');
+      if (!text) {
+        alert('✍️ Bạn hãy gõ tên món ăn hoặc số Calo vào ô chữ (VD: "200g ức gà, 1 bát phở bò" hoặc "Bánh ngọt 300 kcal 10g đạm") rồi bấm nút này nhé!');
+        return;
+      }
+
+      resultBox.classList.remove('hidden');
+      const lower = text.toLowerCase();
+
+      // Trường hợp 1: Người dùng gõ sẵn con số kcal hoặc đạm trong câu (VD: "Bữa trưa 550 kcal 35g đạm")
+      const calMatch = lower.match(/(\d+)\s*(kcal|calo|cal)/);
+      const proMatch = lower.match(/(\d+)\s*(g\s*đạm|g\s*dam|g\s*protein|g\s*p|đạm)/);
+      const carbMatch = lower.match(/(\d+)\s*(g\s*carb|g\s*tinh bột|carb)/);
+      const fatMatch = lower.match(/(\d+)\s*(g\s*béo|g\s*fat|béo)/);
+
+      // Tách từng món theo dấu phẩy hoặc dấu cộng
+      const segments = text.split(/[,+;]+/).map(s => s.trim()).filter(Boolean);
+      let addedCount = 0;
+      let summaryHtml = '';
+
+      segments.forEach(seg => {
+        const segLower = seg.toLowerCase();
+        let matchedFood = null;
+        for (const item of OFFLINE_FOOD_DB) {
+          if (item.keywords.some(k => segLower.includes(k))) {
+            matchedFood = item;
+            break;
+          }
+        }
+
+        if (matchedFood) {
+          let multiplier = 1;
+          // Kiểm tra xem người dùng có ghi số gam (VD: 200g, 150gr) không
+          const gramMatch = segLower.match(/(\d+(?:\.\d+)?)\s*(g|gr|gam|ml)/);
+          const countMatch = segLower.match(/(\d+(?:\.\d+)?)\s*(quả|bát|tô|chén|đĩa|hộp|cốc|ly|lát|ổ|củ|muỗng)/);
+
+          if (gramMatch && matchedFood.unitType === '100g') {
+            multiplier = parseFloat(gramMatch[1]) / 100;
+          } else if (countMatch) {
+            multiplier = parseFloat(countMatch[1]);
+          } else if (gramMatch && matchedFood.unitType === 'item') {
+            multiplier = parseFloat(gramMatch[1]) / 100;
+          }
+
+          const cal = Math.round(matchedFood.cal * multiplier);
+          const pro = Math.round(matchedFood.pro * multiplier);
+          const carb = Math.round(matchedFood.carb * multiplier);
+          const fat = Math.round(matchedFood.fat * multiplier);
+          const na = Math.round(matchedFood.na * multiplier);
+
+          scannedMealsToday.push({
+            name: `${seg} (${matchedFood.label})`,
+            cal, pro, carb, fat, sodium: na
+          });
+          addedCount++;
+          summaryHtml += `<div>✅ <b>${seg}:</b> ${cal} kcal | 🥩 ${pro}g Đạm | 🍚 ${carb}g Carb | 🥑 ${fat}g Béo</div>`;
+        }
+      });
+
+      // Nếu không khớp từ điển nhưng người dùng có gõ số kcal trong câu
+      if (addedCount === 0 && calMatch) {
+        const cal = parseInt(calMatch[1]) || 0;
+        const pro = proMatch ? parseInt(proMatch[1]) : Math.round((cal * 0.25) / 4);
+        const carb = carbMatch ? parseInt(carbMatch[1]) : Math.round((cal * 0.45) / 4);
+        const fat = fatMatch ? parseInt(fatMatch[1]) : Math.round((cal * 0.30) / 9);
+
+        scannedMealsToday.push({ name: text, cal, pro, carb, fat, sodium: 200 });
+        addedCount++;
+        summaryHtml += `<div>✅ <b>${text}:</b> ${cal} kcal | 🥩 ${pro}g Đạm | 🍚 ${carb}g Carb | 🥑 ${fat}g Béo</div>`;
+      }
+
+      if (addedCount > 0) {
+        resultBox.innerHTML = `<div class="text-emerald-400 font-bold">⚡ Đã tự động nhận diện Offline & cộng vào tổng hôm nay:</div>` + summaryHtml;
+        document.getElementById('foodNoteInput').value = '';
+        renderScannedMeals();
+        updateTracker();
+      } else {
+        resultBox.innerHTML = `<div class="text-amber-300">💡 Món <b>"${text}"</b> chưa có trong từ điển Offline. Bạn hãy gõ kèm số Calo (VD: <i>"${text} 350 kcal 20g đạm"</i>) hoặc điền vào hàng <b>Điền Tay Trực Tiếp</b> ngay bên dưới nhé!</div>`;
+      }
+    }
+
+    // HÀM ĐIỀN TAY TRỰC TIẾP SỐ CALO / MACRO
+    function addManualMealEntry() {
+      const name = document.getElementById('manualName').value.trim() || 'Món nhập tay';
+      const cal = parseInt(document.getElementById('manualCal').value) || 0;
+      let pro = parseInt(document.getElementById('manualPro').value);
+      let carb = parseInt(document.getElementById('manualCarb').value);
+      let fat = parseInt(document.getElementById('manualFat').value);
+
+      if (cal <= 0 && isNaN(pro)) {
+        alert('🔢 Bạn hãy nhập ít nhất số Calo (kcal) hoặc số Đạm (g) vào ô trước khi bấm Cộng nhé!');
+        return;
+      }
+
+      // Nếu người dùng chỉ biết số Calo mà bỏ trống Đạm/Carb/Béo -> Tự động ước tính tỷ lệ cân bằng
+      if (isNaN(pro)) pro = Math.round((cal * 0.25) / 4);
+      if (isNaN(carb)) carb = Math.round((cal * 0.45) / 4);
+      if (isNaN(fat)) fat = Math.round((cal * 0.30) / 9);
+
+      const finalCal = cal > 0 ? cal : (pro * 4 + carb * 4 + fat * 9);
+
+      scannedMealsToday.push({
+        name: '✍️ ' + name,
+        cal: finalCal,
+        pro: pro || 0,
+        carb: carb || 0,
+        fat: fat || 0,
+        sodium: 150
+      });
+
+      document.getElementById('manualName').value = '';
+      document.getElementById('manualCal').value = '';
+      document.getElementById('manualPro').value = '';
+      document.getElementById('manualCarb').value = '';
+      document.getElementById('manualFat').value = '';
+
+      renderScannedMeals();
+      updateTracker();
+    }
+
+    function clearSelectedImage(e) {
+      e.stopPropagation();
+      currentImageBase64 = null;
+      document.getElementById('foodImageInput').value = '';
+      document.getElementById('foodPreview').classList.add('hidden');
+      document.getElementById('clearImgBtn').classList.add('hidden');
+      document.getElementById('uploadPlaceholder').classList.remove('hidden');
+    }
+
+    // Hỗ trợ gọi AI cho cả trường hợp CÓ ẢNH hoặc CHỈ CÓ CHỮ (Không có ảnh)
+    async function analyzeFoodPhotoOrTextAI() {
+      cleanAndSaveKey();
+      const apiKey = document.getElementById('apiKeyInput').value;
+      const userNote = document.getElementById('foodNoteInput').value.trim();
+
+      if (!currentImageBase64 && !userNote) {
+        alert('📷 Bạn hãy Chụp ảnh HOẶC gõ tên món ăn vào ô chữ bên phải trước nhé!');
+        return;
+      }
+
+      // Nếu không có API Key mà chỉ có chữ -> Tự động chuyển sang bộ nhận diện Offline luôn!
+      if (!apiKey && !currentImageBase64 && userNote) {
+        smartOfflineTextParse();
+        return;
+      }
+
+      if (!apiKey) {
+        alert('⚠️ Để dùng nút AI màu cam, hãy dán API Key ở trên. Hoặc bạn bấm nút màu xanh "⚡ Tự Nhận Diện Bằng Chữ (Không Cần API)" ngay bên cạnh nhé!');
+        return;
+      }
+
+      const btn = document.getElementById('analyzeBtn');
+      const resultBox = document.getElementById('aiScanResult');
+
+      btn.disabled = true;
+      btn.innerText = '⏳ AI đang tính Calo...';
+      resultBox.classList.remove('hidden');
+      resultBox.innerHTML = '<div class="text-orange-300 animate-pulse">Đang phân tích dinh dưỡng...</div>';
+
+      const promptText = `Bạn là chuyên gia dinh dưỡng & dược sĩ thể hình. Hãy phân tích bữa ăn sau đây (từ ảnh chụp hoặc từ mô tả văn bản của người dùng: "${userNote || 'Xem trong ảnh'}").
+Nếu là THUỐC BỔ / VITAMIN (như gói DHC), đặt "is_supplement": true, calories=0.
+Nếu là ĐỒ ĂN / ĐỒ UỐNG, đặt "is_supplement": false và tính chính xác Calo, Đạm, Carb, Béo, Muối.
+Trả về JSON hợp lệ:
+{
+  "is_supplement": boolean,
+  "meal_name": "Tên món ăn + định lượng",
+  "calories": số_nguyên_kcal,
+  "protein": số_nguyên_gam_đạm,
+  "carbs": số_nguyên_gam_carb,
+  "fat": số_nguyên_gam_béo,
+  "sodium": số_nguyên_mg_natri,
+  "advice": "Nhận xét ngắn gọn cho mục tiêu giảm mỡ nọng cằm và tăng cơ"
+}`;
+
+      const imageParts = currentImageBase64
+        ? [{ inline_data: { mime_type: currentImageMime, data: currentImageBase64 } }]
+        : [];
+
+      try {
+        const parsed = await callGeminiVisionAPI(promptText, imageParts);
+
+        if (parsed.is_supplement) {
+          resultBox.innerHTML = `
+            <div class="font-bold text-purple-400">💊 Nhận diện Thực Phẩm Bổ Sung: ${parsed.meal_name}</div>
+            <div class="text-slate-300 leading-relaxed mt-1">💡 ${parsed.advice}</div>
+          `;
+        } else {
+          scannedMealsToday.push({
+            name: parsed.meal_name || userNote || 'Bữa ăn AI',
+            cal: Number(parsed.calories) || 0,
+            pro: Number(parsed.protein) || 0,
+            carb: Number(parsed.carbs) || 0,
+            fat: Number(parsed.fat) || 0,
+            sodium: Number(parsed.sodium) || 0
+          });
+
+          resultBox.innerHTML = `
+            <div class="font-bold text-emerald-400">✅ Đã cộng vào hôm nay: ${parsed.meal_name}</div>
+            <div class="text-slate-200">🔥 <b>${parsed.calories} kcal</b> | 🥩 Đạm: <b>${parsed.protein}g</b> | 🍚 Carb: <b>${parsed.carbs}g</b> | 🥑 Béo: <b>${parsed.fat}g</b> | 💧 Muối: <b>${parsed.sodium}mg</b></div>
+            <div class="text-amber-300 italic">💡 ${parsed.advice}</div>
+          `;
+          document.getElementById('foodNoteInput').value = '';
+          renderScannedMeals();
+          updateTracker();
+        }
+      } catch (err) {
+        // Nếu gọi API lỗi nhưng người dùng có nhập chữ -> Tự động fallback sang bộ tính Offline!
+        if (userNote) {
+          smartOfflineTextParse();
+        } else {
+          resultBox.innerHTML = `<div class="text-rose-400">❌ Lỗi kết nối AI: ${err.message}. Bạn có thể gõ tên món ăn vào ô chữ và bấm nút màu xanh "⚡ Tự Nhận Diện Bằng Chữ (Offline)" ngay bên trên!</div>`;
+        }
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '🤖 AI Phân Tích (Có Ảnh Hoặc Chỉ Chữ)';
+      }
+    }
+
     async function discoverWorkingModels(apiKey) {
       const selected = document.getElementById('modelSelect').value || 'gemini-3.8-flash';
-      let candidateModels = [
-        selected,
-        'gemini-3.8-flash',
-        'gemini-3.8-pro',
-        'gemini-3.0-flash',
-        'gemini-2.5-flash'
-      ];
+      let candidateModels = [selected, 'gemini-3.8-flash', 'gemini-3.0-flash', 'gemini-2.5-flash'];
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`, {
           headers: { 'x-goog-api-key': apiKey }
@@ -559,11 +842,6 @@
             .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
             .map(m => m.name.replace('models/', ''))
             .filter(name => name.includes('gemini') && !name.includes('embedding') && !name.includes('tts') && !name.includes('imagen'));
-
-          supported.sort((a, b) => {
-            const score = (str) => (str.includes('3.8-flash') ? 120 : str.includes('3.8') ? 110 : str.includes('3.0-flash') ? 90 : str.includes('flash') ? 50 : 10);
-            return score(b) - score(a);
-          });
           candidateModels = [...new Set([selected, ...supported, ...candidateModels])];
         }
       } catch (e) {}
@@ -576,14 +854,14 @@
       const statusLabel = document.getElementById('activeModelLabel');
       const btn = document.getElementById('testKeyBtn');
 
-      if (!apiKey || apiKey.length < 15) {
-        statusLabel.innerHTML = '<span class="text-rose-400">❌ Bạn hãy dán mã API Key (bắt đầu bằng AQ... hoặc AIza...) vào ô bên trên trước nhé!</span>';
+      if (!apiKey || apiKey.length < 10) {
+        statusLabel.innerHTML = '<span class="text-rose-400">❌ Hãy dán mã API Key vào ô trước nhé!</span>';
         return;
       }
 
       btn.disabled = true;
       btn.innerText = '⏳ Đang kiểm tra...';
-      statusLabel.innerHTML = '<span class="text-cyan-300 animate-pulse">Đang kết nối thử với gemini-3.8-flash...</span>';
+      statusLabel.innerHTML = '<span class="text-cyan-300 animate-pulse">Đang kiểm tra kết nối...</span>';
 
       try {
         const modelsToTry = await discoverWorkingModels(apiKey);
@@ -594,49 +872,37 @@
           try {
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(apiKey)}`, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-goog-api-key': apiKey
-              },
+              headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
               body: JSON.stringify({ contents: [{ parts: [{ text: 'OK' }] }] })
             });
             const d = await resp.json();
-            if (!d.error && d.candidates) {
-              workingModel = m;
-              break;
-            } else if (d.error) {
+            if (!d.error && d.candidates) { workingModel = m; break; }
+            else if (d.error) {
               lastErr = d.error.message;
-              // Tự động bắt tên model Google gợi ý trong thông báo lỗi (ví dụ models/gemini-3.8-flash)
               const match = lastErr.match(/models\/(gemini-[a-zA-Z0-9.-]+)/);
-              if (match && match[1] && !modelsToTry.includes(match[1])) {
-                modelsToTry.push(match[1]);
-              }
+              if (match && match[1] && !modelsToTry.includes(match[1])) modelsToTry.push(match[1]);
             }
-          } catch (err) {
-            lastErr = err.message;
-          }
+          } catch (err) { lastErr = err.message; }
         }
 
         if (workingModel) {
           localStorage.setItem(DETECTED_MODEL_KEY, workingModel);
           document.getElementById('modelSelect').value = workingModel;
-          statusLabel.innerHTML = `<span class="text-emerald-400 font-bold">✅ Kết nối thành công! Đã khóa Model chuẩn: <code>${workingModel}</code>. Bây giờ bạn có thể chụp ảnh món ăn ngay bên dưới!</span>`;
+          statusLabel.innerHTML = `<span class="text-emerald-400 font-bold">✅ Kết nối thành công Model: <code>${workingModel}</code>!</span>`;
         } else {
-          statusLabel.innerHTML = `<span class="text-rose-400">❌ Phản hồi từ Google: ${lastErr}</span>`;
+          statusLabel.innerHTML = `<span class="text-amber-300">⚠️ Thông báo từ khóa API: ${lastErr}. (Lưu ý: Mã bắt đầu bằng <b>AQ...</b> là Vertex Auth Token cần tạo lại bằng nút <b>"Create API key in new project"</b> tại <b>aistudio.google.com/app/apikey</b> để lấy mã <b>AIza...</b> miễn phí. Trong lúc đó bạn có thể dùng ngay nút màu xanh <b>"⚡ Tự Nhận Diện Bằng Chữ Offline"</b> bên dưới!).</span>`;
         }
       } catch (err) {
         statusLabel.innerHTML = `<span class="text-rose-400">❌ Lỗi: ${err.message}</span>`;
       } finally {
         btn.disabled = false;
-        btn.innerText = '✅ Kiểm Tra & Lưu Key';
+        btn.innerText = '✅ Kiểm Tra Key';
       }
     }
 
     async function callGeminiVisionAPI(promptText, imageParts) {
       cleanAndSaveKey();
       const apiKey = document.getElementById('apiKeyInput').value;
-      if (!apiKey) throw new Error('Bạn chưa dán Gemini API Key (AQ... hoặc AIza...) ở khung phía trên!');
-
       const modelsQueue = await discoverWorkingModels(apiKey);
       let lastError = null;
 
@@ -644,10 +910,7 @@
         try {
           const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-goog-api-key': apiKey
-            },
+            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
             body: JSON.stringify({
               contents: [{ parts: [{ text: promptText }, ...imageParts] }],
               generationConfig: { responseMimeType: "application/json" }
@@ -657,22 +920,15 @@
           if (data.error) {
             lastError = new Error(data.error.message);
             const match = data.error.message.match(/models\/(gemini-[a-zA-Z0-9.-]+)/);
-            if (match && match[1] && !modelsQueue.includes(match[1])) {
-              modelsQueue.push(match[1]);
-            }
+            if (match && match[1] && !modelsQueue.includes(match[1])) modelsQueue.push(match[1]);
             continue;
           }
           localStorage.setItem(DETECTED_MODEL_KEY, modelName);
-          document.getElementById('activeModelLabel').innerHTML = `<span class="text-emerald-400">Đang dùng Model: <code>${modelName}</code></span>`;
-
           const rawText = data.candidates[0].content.parts[0].text;
-          const cleanJson = rawText.replace(/```json|```/g, '').trim();
-          return JSON.parse(cleanJson);
-        } catch (err) {
-          lastError = err;
-        }
+          return JSON.parse(rawText.replace(/```json|```/g, '').trim());
+        } catch (err) { lastError = err; }
       }
-      throw lastError || new Error('Không thể kết nối tới Gemini API.');
+      throw lastError || new Error('Không thể gọi AI.');
     }
 
     function switchTab(tabId) {
@@ -730,7 +986,7 @@
         if (permission === "granted") {
           document.getElementById('notifBtn').innerText = "✅ Đã Bật Nhắc Nhở";
           document.getElementById('notifBtn').classList.replace('bg-orange-500', 'bg-emerald-600');
-          new Notification("🔥 Body Recomp Pro V7", {
+          new Notification("🔥 Body Recomp Pro V8", {
             body: "Đã kích hoạt lịch nhắc 3 gói DHC (Lutein 08:45, Kẽm 12:30, Biotin 19:30)!"
           });
         }
@@ -809,12 +1065,12 @@
     }
 
     function downloadICS() {
-      let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//BodyRecompProV7//VN\n";
+      let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//BodyRecompProV8//VN\n";
       const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
       dailyReminders.forEach((r, idx) => {
         const hm = r.time.replace(':','') + '00';
         ics += "BEGIN:VEVENT\n";
-        ics += `UID:recompv7-${idx}@bodyrecomp.local\n`;
+        ics += `UID:recompv8-${idx}@bodyrecomp.local\n`;
         ics += `DTSTART;TZID=Asia/Ho_Chi_Minh:${today}T${hm}\n`;
         ics += `RRULE:FREQ=DAILY\n`;
         ics += `SUMMARY:${r.title}\n`;
@@ -855,75 +1111,11 @@
         const img = document.getElementById('foodPreview');
         img.src = dataUrl;
         img.classList.remove('hidden');
+        document.getElementById('clearImgBtn').classList.remove('hidden');
         document.getElementById('uploadPlaceholder').classList.add('hidden');
         currentImageBase64 = dataUrl.split(',')[1];
         currentImageMime = 'image/jpeg';
       });
-    }
-
-    async function analyzeFoodPhoto() {
-      cleanAndSaveKey();
-      const apiKey = document.getElementById('apiKeyInput').value;
-      if (!apiKey) { alert('⚠️ Hãy dán Gemini API Key (AQ... hoặc AIza...) ở thanh trên cùng trước nhé!'); return; }
-      if (!currentImageBase64) { alert('📷 Hãy chọn hoặc chụp ảnh trước nhé!'); return; }
-
-      const btn = document.getElementById('analyzeBtn');
-      const resultBox = document.getElementById('aiScanResult');
-      const userNote = document.getElementById('foodNoteInput').value.trim();
-
-      btn.disabled = true;
-      btn.innerText = '⏳ AI (gemini-3.8-flash) đang phân tích ảnh...';
-      resultBox.classList.remove('hidden');
-      resultBox.innerHTML = '<div class="text-orange-300 animate-pulse">Đang đọc dữ liệu từ ảnh bằng gemini-3.8-flash...</div>';
-
-      const promptText = `Bạn là chuyên gia dinh dưỡng & dược sĩ thể hình. Phân tích bức ảnh này. Ghi chú của người dùng: "${userNote || 'Không có'}".
-Nếu ảnh là THUỐC BỔ / VITAMIN (như gói DHC), hãy đặt "is_supplement": true và liệt kê cách uống từng gói trong "advice", các số calories/protein/carbs/fat đặt bằng 0.
-Nếu ảnh là ĐỒ ĂN / ĐỒ UỐNG, đặt "is_supplement": false và ước tính chính xác Calo, Đạm, Carb, Béo, Muối.
-Trả về JSON hợp lệ theo cấu trúc:
-{
-  "is_supplement": boolean,
-  "meal_name": "Tên món ăn hoặc Tên các gói thuốc bổ trong ảnh",
-  "calories": số_nguyên_kcal,
-  "protein": số_nguyên_gam_đạm,
-  "carbs": số_nguyên_gam_carb,
-  "fat": số_nguyên_gam_béo,
-  "sodium": số_nguyên_mg_natri,
-  "advice": "Nhận xét chi tiết, liều uống hợp lý không kỵ Matcha sáng, giúp giảm mỡ nọng cằm và lành cổ tay"
-}`;
-
-      try {
-        const parsed = await callGeminiVisionAPI(promptText, [{ inline_data: { mime_type: currentImageMime, data: currentImageBase64 } }]);
-
-        if (parsed.is_supplement) {
-          resultBox.innerHTML = `
-            <div class="font-bold text-purple-400">💊 Nhận diện Thực Phẩm Bổ Sung: ${parsed.meal_name}</div>
-            <div class="text-slate-300 leading-relaxed mt-1">💡 ${parsed.advice}</div>
-            <div class="text-cyan-300 text-[11px] mt-1">👉 Bấm sang <b>Tab 3 (Thuốc Bổ DHC & Nhắc Giờ)</b> — 3 gói DHC của bạn đã được cài sẵn lịch uống chuẩn trong đó!</div>
-          `;
-        } else {
-          scannedMealsToday.push({
-            name: parsed.meal_name || 'Bữa ăn chụp ảnh',
-            cal: Number(parsed.calories) || 0,
-            pro: Number(parsed.protein) || 0,
-            carb: Number(parsed.carbs) || 0,
-            fat: Number(parsed.fat) || 0,
-            sodium: Number(parsed.sodium) || 0
-          });
-
-          resultBox.innerHTML = `
-            <div class="font-bold text-emerald-400">✅ Đã cộng vào hôm nay: ${parsed.meal_name}</div>
-            <div class="text-slate-200">🔥 <b>${parsed.calories} kcal</b> | 🥩 Đạm: <b>${parsed.protein}g</b> | 🍚 Carb: <b>${parsed.carbs}g</b> | 🥑 Béo: <b>${parsed.fat}g</b> | 💧 Muối: <b>${parsed.sodium}mg</b></div>
-            <div class="text-amber-300 italic">💡 ${parsed.advice}</div>
-          `;
-          renderScannedMeals();
-          updateTracker();
-        }
-      } catch (err) {
-        resultBox.innerHTML = `<div class="text-rose-400">❌ Lỗi: ${err.message}</div>`;
-      } finally {
-        btn.disabled = false;
-        btn.innerText = '🔍 Phân Tích Ảnh & Cộng Vào Hôm Nay';
-      }
     }
 
     function renderScannedMeals() {
@@ -933,7 +1125,7 @@ Trả về JSON hợp lệ theo cấu trúc:
       sec.classList.remove('hidden');
       list.innerHTML = scannedMealsToday.map((m, idx) => `
         <div class="flex justify-between items-center bg-slate-900 px-3 py-2 rounded-lg border border-slate-700">
-          <div><span class="font-bold text-white">📸 ${m.name}</span> <span class="text-slate-400 ml-2">(${m.cal} kcal • ${m.pro}g P • ${m.carb}g C • ${m.fat}g F)</span></div>
+          <div><span class="font-bold text-white">${m.name}</span> <span class="text-slate-400 ml-2">(${m.cal} kcal • ${m.pro}g P • ${m.carb}g C • ${m.fat}g F)</span></div>
           <button onclick="scannedMealsToday.splice(${idx},1);renderScannedMeals();updateTracker();" class="text-rose-400 font-bold px-2">✕</button>
         </div>
       `).join('');
@@ -1275,7 +1467,7 @@ Trả về JSON hợp lệ theo cấu trúc:
       tbody.innerHTML = logs.map(l => {
         const diff = l.cal - l.tdee;
         const diffText = diff <= 0 ? `<span class="text-emerald-400 font-bold">${diff} kcal</span>` : `<span class="text-rose-400 font-bold">+${diff} kcal</span>`;
-        const photoNames = (l.scannedMeals || []).map(m => `📸${m.name}`).join(', ');
+        const photoNames = (l.scannedMeals || []).map(m => `${m.name}`).join(', ');
         const badge = l.hasPhoto ? `<span class="bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded text-[10px] mr-1">🕺Có ảnh Body</span>` : '';
         const summary = `${badge}Tôm ${l.items.shrimp}g, Trứng ${l.items.egg}q, Sữa chua ${l.items.yogurt}h, Sữa CĐ ${l.items.milk}h, Matcha ${l.items.matcha}m + Dừa ${l.items.coco}ml, Cơm ${l.items.rice}b ${photoNames ? ' | ' + photoNames : ''}`;
         return `
@@ -1303,7 +1495,7 @@ Trả về JSON hợp lệ theo cấu trúc:
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'nhat-ky-body-recomp-v7.csv';
+      a.download = 'nhat-ky-body-recomp-v8.csv';
       a.click();
     }
 
